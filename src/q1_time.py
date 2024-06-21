@@ -5,6 +5,10 @@ import json
 from ftime import abreDFt
 
 def q1_time(file_path: str) -> List[Tuple[datetime.date, str]]:
+    # Por mejorar:
+    #   - Se hace agrupacion por username, puede cambiar en tiempo, revisar hacerlo por id. 
+    #     * por necesidad se puede usar para revisar impacto de nombre de cuenta mas que dueño
+    
     # Defino columnas necesarias (para acotar necesidad de info cargada a lo necesario)
     col = ['date', 'renderedContent', 'mentionedUsers', 'user.username', 'user.displayname', 'user.id']
     col_output = ['date', 'user.username']
