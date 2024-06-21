@@ -1,6 +1,7 @@
 import pandas as pd
 import json
 
+
 def abreDFt (file_path: str, col: list):
     with open(file_path) as f:
         lines = f.read().splitlines()

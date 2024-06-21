@@ -9,7 +9,7 @@ def q2_time(file_path: str) -> List[Tuple[str, int]]:
     # Por mejorar:
     #   - Se hace conteo de emojis sin filtrar repetidos en mismo tweet (enfasis de emocion)
     #     ni tampoco analisis de sentimiento de texto.
-    
+
     # Defino columnas necesarias (para acotar necesidad de info cargada a lo necesario)
     col = ['date', 'renderedContent', 'mentionedUsers', 'user.username', 'user.displayname', 'user.id']
     col_output = ['emoji', 'q']
