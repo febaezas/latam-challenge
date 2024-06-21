@@ -2,7 +2,7 @@ from typing import List, Tuple
 from datetime import datetime
 import pandas as pd
 import json
-
+from ftime import abreDFt
 
 def q1_time(file_path: str) -> List[Tuple[datetime.date, str]]:
     # Defino columnas necesarias (para acotar necesidad de info cargada a lo necesario)
@@ -14,19 +14,8 @@ def q1_time(file_path: str) -> List[Tuple[datetime.date, str]]:
 
     # 14 s con %timeit
     # Se lee el archivo .json
-    with open(file_path) as f:
-        lines = f.read().splitlines()
-
-    # Se crea un dataframe con el json leido
-    df_inter = pd.DataFrame(lines)
-    df_inter.columns = ['jsond']
-    df_inter['jsond'].apply(json.loads)
-
-    # aplico normlizacion JSON para aplanar JSON anidados (con prefijo del padre)
-    df = pd.json_normalize(df_inter['jsond'].apply(json.loads))
-    
-    # Filtro columnas necesarias
-    df = df[col]
+    # Se lee Dataframe desde funcion propia para reutilizar codigo
+    df = abreDFt(file_path, col)
 
     df['user.username'] = df['user.username'].astype(str)
     
