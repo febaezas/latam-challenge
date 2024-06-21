@@ -37,6 +37,5 @@ def q1_time(file_path: str) -> List[Tuple[datetime.date, str]]:
     dff = dff[col_output]
     
     # Se devuelve la lista de tuplas / Revisar cambio formato de fecha timestamp a datetime.date
-    
     salida = list(dff.itertuples(index=False, name=None))
     return salida
