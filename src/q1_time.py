@@ -1,5 +1,53 @@
 from typing import List, Tuple
 from datetime import datetime
+import pandas as pd
+import json
+
 
 def q1_time(file_path: str) -> List[Tuple[datetime.date, str]]:
-    pass
+    # Defino columnas necesarias (para acotar necesidad de info cargada a lo necesario)
+    col = ['date', 'renderedContent', 'mentionedUsers', 'user.username', 'user.displayname', 'user.id']
+    col_output = ['date', 'user.username']
+
+    # Configuracion de largo maximo por columna a imprimir
+    pd.set_option("max_colwidth", 40)
+
+    # 14 s con %timeit
+    # Se lee el archivo .json
+    with open(file_path) as f:
+        lines = f.read().splitlines()
+
+    # Se crea un dataframe con el json leido
+    df_inter = pd.DataFrame(lines)
+    df_inter.columns = ['jsond']
+    df_inter['jsond'].apply(json.loads)
+
+    # aplico normlizacion JSON para aplanar JSON anidados (con prefijo del padre)
+    df = pd.json_normalize(df_inter['jsond'].apply(json.loads))
+    
+    # Filtro columnas necesarias
+    df = df[col]
+
+    df['user.username'] = df['user.username'].astype(str)
+    
+    # Columna a tipo fecha para hacer calculos.
+    df['date'] = pd.to_datetime(df['date'])
+
+    # Obtenog top 10 fechas con mayor interaccion
+    df_fecha = (df['date'].dt.floor('d').value_counts().reset_index(name='count'))
+    
+    # Agrupo por fecha / usuario para sacar interaccion por usuario/fecha
+    df_usr = df.groupby([df['date'].dt.floor('d'), 'user.username']).size().reset_index(name='q')
+
+    # Hago join entre fechas y ususarios con mayor interaccion
+    dff = pd.merge(df_fecha.head(10), df_usr, how="left", on=["date", "date"]).sort_values(by=['count', 'q'],ascending=False).reset_index()
+    
+    # Filtro el usuario con mayor interaccion en cada fecha
+    idx = dff.groupby(['date'])['q'].idxmax()
+    dff = dff.loc[idx].sort_values(by=['count'],ascending=False)
+    dff = dff[col_output]
+    
+    # Se devuelve la lista de tuplas / Revisar cambio formato de fecha timestamp a datetime.date
+    
+    salida = list(dff.itertuples(index=False, name=None))
+    return salida
