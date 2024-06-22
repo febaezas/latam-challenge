@@ -3,9 +3,6 @@ from datetime import datetime
 import pandas as pd
 import json
 
-import itertools
-import multiprocessing as mp
-
 def q1_memory(file_path: str) -> List[Tuple[datetime.date, str]]:
     # Por mejorar:
     #   - Se hace agrupacion por username, puede cambiar en tiempo, revisar hacerlo por id. 
