@@ -36,6 +36,8 @@ def q1_time(file_path: str) -> List[Tuple[datetime.date, str]]:
     idx = dff.groupby(['date'])['q'].idxmax()
     dff = dff.loc[idx].sort_values(by=['count'],ascending=False)
     dff = dff[col_output]
+
+    dff['date'] = dff['date'].apply(lambda x: x.date())
     
     # Se devuelve la lista de tuplas / Revisar cambio formato de fecha timestamp a datetime.date
     salida = list(dff.itertuples(index=False, name=None))
